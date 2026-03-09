@@ -29,7 +29,12 @@ class Customer:
         return transaction
 
     def verify_user(self) -> bool:
-        return self.customer_id > 0 and bool(self.name.strip())
+        # A real user must have valid identity fields and past purchases.
+        return (
+            self.customer_id > 0
+            and bool(self.name.strip())
+            and len(self.purchase_history) > 0
+        )
 
 
 class FoodItem:
@@ -73,6 +78,17 @@ class ItemCatalog:
     def filter_by_category(self, category: str) -> list[FoodItem]:
         target = category.strip().lower()
         return [item for item in self.items if item.category.lower() == target]
+
+    def sort_by_name(self, descending: bool = False) -> list[FoodItem]:
+        return sorted(self.items, key=lambda item: item.name.lower(), reverse=descending)
+
+    def sort_by_price(self, descending: bool = False) -> list[FoodItem]:
+        return sorted(self.items, key=lambda item: item.price, reverse=descending)
+
+    def sort_by_popularity(self, descending: bool = True) -> list[FoodItem]:
+        return sorted(
+            self.items, key=lambda item: item.popularity_rating, reverse=descending
+        )
 
     def add_item(self, item: FoodItem) -> None:
         if any(existing.item_id == item.item_id for existing in self.items):
