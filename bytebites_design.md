@@ -2,9 +2,8 @@ classDiagram
     class Customer {
         -int customerId
         -String name
-        -Transaction[] purchaseHistory
         +getPurchaseHistory() Transaction[]
-        +placeOrder(selectedItems: FoodItem[]) Transaction
+        +placeOrder(items: FoodItem[]) Transaction
         +verifyUser() bool
     }
 
@@ -33,7 +32,7 @@ classDiagram
         +getItemCount() int
     }
 
-    Customer "1" --> "0..*" Transaction : purchase history
-    Customer "1" --> "0..*" Transaction : places
-    Transaction "1" *-- "1..*" FoodItem : contains
-    ItemCatalog "1" o-- "0..*" FoodItem : lists
+    Customer "1" --> "many" Transaction : has purchase history
+    Transaction "many" *-- "many" FoodItem : contains
+    ItemCatalog "1" *-- "many" FoodItem : manages
+    Customer "1" --> "1" Transaction : places
